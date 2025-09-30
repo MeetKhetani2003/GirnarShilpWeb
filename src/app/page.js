@@ -8,27 +8,30 @@ import { Carousel } from 'react-responsive-carousel';
 
 import ProductCard from '@/components/ProductCard'; // Assuming this component exists
 
+import heroImg from '../../public/hero.png';
+
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
+const commonImg = heroImg;
 // -----------------------------------------------------------------------------
 // Component Data
 // -----------------------------------------------------------------------------
 
 const SLIDES = [
   {
-    img: '/hero.png', // Gujarati Title: Girnar Shilp
+    img: commonImg, // Gujarati Title: Girnar Shilp
     title: 'ગિરનાર શિલ્પ', // Gujarati Description: 80+ વર્ષોથી માર્બલ પ્રતિમા અને મંદિર નિર્માણમાં અમારું વારસો.
     desc: '૮૦+ વર્ષોથી માર્બલ પ્રતિમા અને મંદિર નિર્માણમાં અમારું વારસો.', // Gujarati Subtitle: સ્થાપત્યનું દિવ્ય સ્વરૂપ
     subtitle: 'સ્થાપત્યનું દિવ્ય સ્વરૂપ',
   },
   {
-    img: '/hero.png', // Gujarati Title: Divine Artistry
+    img: commonImg, // Gujarati Title: Divine Artistry
     title: 'દિવ્ય કળા', // Gujarati Description: ભગવાન-દેવીની પ્રતિમા થી લઈને પૂર્વજોના ચિત્ર આધારિત મૂર્તિ સુધી, અમે શ્રદ્ધાને સ્વરૂપ આપીએ છીએ.
     desc: 'ભગવાન-દેવીની પ્રતિમા થી લઈને પૂર્વજોના ચિત્ર આધારિત મૂર્તિ સુધી, અમે શ્રદ્ધાને સ્વરૂપ આપીએ છીએ.', // Gujarati Subtitle: Giving Shape to Faith
     subtitle: 'શ્રદ્ધાને આકાર આપીએ છીએ',
   },
   {
-    img: '/hero.png', // Gujarati Title: Unmatched Craftsmanship
+    img: commonImg, // Gujarati Title: Unmatched Craftsmanship
     title: 'અનોખી હસ્તકલા', // Gujarati Description: પથ્થરની નેમપ્લેટ, દાતાશ્રીઓની યાદી, પોર્ટ્રેટ્સ અને વધુ — શ્રેષ્ઠ કારીગરી સાથે.
     desc: 'પથ્થરની નેમપ્લેટ, દાતાશ્રીઓની યાદી, પોર્ટ્રેટ્સ અને વધુ — શ્રેષ્ઠ કારીગરી સાથે.', // Gujarati Subtitle: Supreme Workmanship
     subtitle: 'સર્વોત્તમ કારીગરી',
@@ -182,7 +185,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
         >
           <Image
-            src='/hero.png'
+            src=commonImg
             alt='Girnar Shilp Craftsmanship'
             className='rounded-3xl shadow-2xl w-full h-auto object-cover'
             width={700} // Set a typical width for this component size
