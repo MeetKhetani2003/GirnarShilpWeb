@@ -16,7 +16,7 @@ const commonImg = heroImg;
 // -----------------------------------------------------------------------------
 // Component Data
 // -----------------------------------------------------------------------------
-
+const WORK_INDICES = [1, 2, 3, 4, 5, 6, 7, 8];
 const SLIDES = [
   {
     img: commonImg, // Gujarati Title: Girnar Shilp
@@ -82,7 +82,18 @@ const itemVariants = {
 
 export default function Home() {
   const [products, setProducts] = React.useState([]);
+  const [lightboxOpen, setLightboxOpen] = React.useState(false);
+  const [selectedImage, setSelectedImage] = React.useState(null); // Lightbox function updated to accept a string URL
 
+  const openLightbox = (imageSrc) => {
+    setSelectedImage(imageSrc);
+    setLightboxOpen(true);
+  };
+  const closeLightbox = () => {
+    // <--- The function that was 'not defined'
+    setLightboxOpen(false);
+    setSelectedImage(null);
+  };
   React.useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products`)
       .then((res) => res.json())
@@ -286,44 +297,55 @@ export default function Home() {
       </section>
       <hr className='max-w-7xl mx-auto border-gray-200' />
       {/* 4. Works Showcase Section (Optimized Grid) */}
-      <section className='max-w-7xl mx-auto px-6 py-20'>
+      <section className='max-w-7xl  mx-auto px-6 py-20'>
         <h2 className='text-4xl font-bold text-gray-900 mb-10 text-center'>
-          Best of Our Works
+          Our Best Works
         </h2>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <motion.div
-              key={i}
-              className='overflow-hidden rounded-xl shadow-lg group cursor-pointer relative h-64'
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.05 }}
-            >
-              {/* FIX: Use Next.js Image with 'fill' for fixed height containers */}
+        <div className='grid grid-cols-2 min-h-72 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-4'>
+          {WORK_INDICES.map((i) => {
+            // The URL path for the public image
+            const publicImagePath = `/images/work-${i}.png`;
 
-              <Image
-                src={`/hero.png`}
-                alt={`Work ${i}`}
-                fill
-                className='object-cover transform group-hover:scale-105 transition duration-500'
-              />
+            return (
+              <motion.div
+                key={i}
+                // Pass the public URL string to the lightbox
+                onClick={() => openLightbox(publicImagePath)}
+                className='overflow-hidden rounded-xl shadow-lg group cursor-pointer relative  w-full min-h-96 border-4 border-white'
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <Image
+                  // Use the desired public path syntax
+                  src={publicImagePath}
+                  alt={`Work ${i}`}
+                  fill
+                  className='object-cover transform group-hover:scale-125 transition duration-500'
+                />
 
-              <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-500 flex items-center justify-center'>
-                <p className='text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition duration-500 border-2 border-white px-4 py-2 rounded-full'>
-                  View Details
-                </p>
-              </div>
-            </motion.div>
-          ))}
+                {/* Overlay for Click Hint (remains the same) */}
+                <div className='absolute inset-0 bg-black/5 group-hover:bg-opacity-50 transition duration-500 flex items-center justify-center'>
+                  <p className='text-white text-base font-semibold opacity-0 group-hover:opacity-100 transition duration-500 border border-white px-4 py-2 rounded-full backdrop-blur-sm'>
+                    View
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         <div className='text-center mt-12'>
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: '0 8px 15px rgba(251, 191, 36, 0.5)',
+            }}
             whileTap={{ scale: 0.95 }}
-            className='bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300 shadow-xl hover:shadow-2xl'
+            className='bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300 shadow-xl'
           >
             View All Projects
           </motion.button>
@@ -393,43 +415,85 @@ export default function Home() {
         </motion.div>
       </section>
       {/* 7. Contact Section (High Impact Footer CTA) */}
-      <section className='max-w-7xl mx-auto px-6 py-16 mb-16 bg-gray-900 text-white rounded-3xl shadow-2xl'>
-        <div className='flex flex-col md:flex-row justify-between items-center text-center md:text-left'>
-          <div className='mb-6 md:mb-0'>
-            <h2 className='text-4xl font-bold mb-2'>Let's Create Together</h2>
+      <section className='py-20'>
+        <section className='max-w-7xl mx-auto px-6 py-16  bg-gray-900 text-white rounded-3xl shadow-2xl'>
+          <div className='flex flex-col md:flex-row justify-between items-center text-center md:text-left'>
+            <div className='mb-6 md:mb-0'>
+              <h2 className='text-4xl font-bold mb-2'>Let's Create Together</h2>
 
-            <p className='text-lg text-gray-400'>
-              Contact us today to discuss your vision for divine sculpture or
-              temple design.
-            </p>
+              <p className='text-lg text-gray-400'>
+                Contact us today to discuss your vision for divine sculpture or
+                temple design.
+              </p>
+            </div>
+
+            <div className='flex flex-col space-y-2 text-lg font-medium'>
+              <p>
+                <span className='text-amber-500 font-bold'>
+                  📍 Girnar Shilp:
+                </span>
+                Gujarat, India
+              </p>
+
+              <p>
+                <span className='text-amber-500 font-bold'>📞 Phone:</span> +91
+                12345 67890
+              </p>
+
+              <p>
+                <span className='text-amber-500 font-bold'>📧 Email:</span>
+                info@girnarshilp.com
+              </p>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className='bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300 shadow-xl mt-6 md:mt-0'
+            >
+              Get Started
+            </motion.button>
           </div>
-
-          <div className='flex flex-col space-y-2 text-lg font-medium'>
-            <p>
-              <span className='text-amber-500 font-bold'>📍 Girnar Shilp:</span>
-              Gujarat, India
-            </p>
-
-            <p>
-              <span className='text-amber-500 font-bold'>📞 Phone:</span> +91
-              12345 67890
-            </p>
-
-            <p>
-              <span className='text-amber-500 font-bold'>📧 Email:</span>
-              info@girnarshilp.com
-            </p>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className='bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300 shadow-xl mt-6 md:mt-0'
-          >
-            Get Started
-          </motion.button>
-        </div>
+        </section>
       </section>
+      {lightboxOpen && selectedImage && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className='fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4 cursor-pointer'
+          onClick={closeLightbox}
+        >
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className='relative max-w-full max-h-full w-auto h-auto'
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image
+          >
+            <Image
+              // When src is a string pointing to a public asset,
+              // you must provide explicit width and height, or use 'fill'
+              // in a container with defined size. Since this is a modal,
+              // we use explicit size for better control.
+              src={selectedImage}
+              alt='Full-screen view of artwork'
+              width={1200}
+              height={800}
+              className='max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl'
+            />
+
+            {/* Close button */}
+            <button
+              onClick={closeLightbox}
+              className='absolute top-4 right-4 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white text-2xl p-2 rounded-full transition-all duration-300 z-10'
+            >
+              &times;
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
     </main>
   );
 }

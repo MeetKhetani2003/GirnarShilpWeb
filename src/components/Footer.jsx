@@ -23,7 +23,7 @@ export default function Footer() {
   );
 
   return (
-    <footer className='bg-gray-800 text-gray-300 py-16 mt-20 border-t-8 border-amber-500'>
+    <footer className=' text-gray-300  border-t-8 border-amber-500'>
       <div className='max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12'>
         {/* Column 1: Brand & Motto */}
         <div className='md:col-span-1'>
