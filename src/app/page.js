@@ -2,6 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
 
@@ -184,7 +185,7 @@ export default function Home() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <img
+          <Image
             src='/hero.png'
             alt='Girnar Shilp Craftsmanship'
             className='rounded-3xl shadow-2xl w-full h-auto object-cover'
@@ -229,7 +230,7 @@ export default function Home() {
             >
               {/* Image Area */}
               <div className='relative h-96 overflow-hidden'>
-                <img // NOTE: Use your actual image paths here (e.g., /service-1.png, /service-2.png)
+                <Image // NOTE: Use your actual image paths here (e.g., /service-1.png, /service-2.png)
                   src={`/service-${(idx % 6) + 1}.png`}
                   alt={service.title}
                   className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
