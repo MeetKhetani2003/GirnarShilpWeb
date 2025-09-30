@@ -8,7 +8,7 @@ import { Carousel } from 'react-responsive-carousel';
 
 import ProductCard from '@/components/ProductCard'; // Assuming this component exists
 
-import heroImg from '/public/images/hero.png';
+import heroImg from '../../public/images/hero.png';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
