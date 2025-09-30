@@ -62,7 +62,6 @@ const TESTIMONIALS = [
   },
 ];
 
-// Framer Motion Variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -78,15 +77,10 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-// -----------------------------------------------------------------------------
-// Main Component
-// -----------------------------------------------------------------------------
-
 export default function Home() {
   const [products, setProducts] = React.useState([]);
 
   React.useEffect(() => {
-    // Fetch products
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data.products || []))
@@ -109,13 +103,16 @@ export default function Home() {
         >
           {SLIDES.map((slide, idx) => (
             <div key={idx} className='relative h-[65vh] md:h-[80vh] w-full'>
-              <img
+              {/* FIX: Use Next.js Image with 'fill' for responsive background image */}
+
+              <Image
                 src={slide.img}
                 alt={slide.title}
-                className='h-full w-full object-cover'
+                fill
+                className='object-cover'
               />
 
-              <div className='absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white px-4 text-center'>
+              <div className='absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white px-4 text-center z-10'>
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -147,7 +144,6 @@ export default function Home() {
           ))}
         </Carousel>
       </section>
-      {/* 2. Legacy/About Section (Focus on 80+ Years) */}
       <section className='max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center'>
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -189,6 +185,8 @@ export default function Home() {
             src='/hero.png'
             alt='Girnar Shilp Craftsmanship'
             className='rounded-3xl shadow-2xl w-full h-auto object-cover'
+            width={700} // Set a typical width for this component size
+            height={500} // Set a typical height for this component size
           />
 
           <div className='absolute -top-6 -left-6 bg-amber-500 text-white p-4 rounded-full text-2xl font-bold transform rotate-3 shadow-lg'>
@@ -197,7 +195,7 @@ export default function Home() {
         </motion.div>
       </section>
       <hr className='max-w-7xl mx-auto border-gray-200' />
-      {/* 3. Services Section (Image on top, Text below) - REVISED DESIGN */}
+      {/* 3. Services Section (Image on top, Text below) - FIXED ALIGNMENT & IMAGE LOADING */}
 
       <section className='max-w-7xl mx-auto px-6 py-20'>
         <h2 className='text-4xl font-bold text-gray-900 mb-4 text-center'>
@@ -230,21 +228,24 @@ export default function Home() {
             >
               {/* Image Area */}
               <div className='relative h-96 overflow-hidden'>
-                <Image // NOTE: Use your actual image paths here (e.g., /service-1.png, /service-2.png)
+                {/* FIX: Use Next.js Image with 'fill' for fixed height containers */}
+
+                <Image
                   src={`/service-${(idx % 6) + 1}.png`}
                   alt={service.title}
-                  className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
+                  fill
+                  className='object-cover transition-transform duration-500 group-hover:scale-110'
                 />
               </div>
 
-              {/* Text Content Area - BELOW the image (Now uses flex to align items) */}
+              {/* FIX: Added flex-col and flex-grow to align the button */}
 
-              <div className='p-6 pt-5 bg-white **flex flex-col h-full**'>
+              <div className='p-6 pt-5 bg-white flex flex-col h-full'>
                 <h3 className='font-semibold text-2xl mb-2 text-gray-900'>
                   {service.title}
                 </h3>
 
-                <p className='text-gray-600 text-base font-normal mb-4 **flex-grow**'>
+                <p className='text-gray-600 text-base font-normal mb-4 flex-grow'>
                   {/* Brief description based on the title */}
 
                   {idx === 0 &&
@@ -265,8 +266,6 @@ export default function Home() {
                   {idx === 5 &&
                     'Custom engraved nameplates and meticulously crafted donor recognition lists for trusts and institutions.'}
                 </p>
-
-                {/* "Explore Now" Link - now automatically pushed to the bottom */}
 
                 <a
                   href='#'
@@ -293,16 +292,19 @@ export default function Home() {
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <motion.div
               key={i}
-              className='overflow-hidden rounded-xl shadow-lg group cursor-pointer relative'
+              className='overflow-hidden rounded-xl shadow-lg group cursor-pointer relative h-64'
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.05 }}
             >
-              <img // Using a simple placeholder system for works
+              {/* FIX: Use Next.js Image with 'fill' for fixed height containers */}
+
+              <Image
                 src={`/hero.png`}
                 alt={`Work ${i}`}
-                className='w-full h-64 object-cover transform group-hover:scale-105 transition duration-500'
+                fill
+                className='object-cover transform group-hover:scale-105 transition duration-500'
               />
 
               <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-500 flex items-center justify-center'>
