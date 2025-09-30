@@ -185,7 +185,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
         >
           <Image
-            src=commonImg
+            src={commonImg}
             alt='Girnar Shilp Craftsmanship'
             className='rounded-3xl shadow-2xl w-full h-auto object-cover'
             width={700} // Set a typical width for this component size
