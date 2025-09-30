@@ -297,12 +297,13 @@ export default function Home() {
       </section>
       <hr className='max-w-7xl mx-auto border-gray-200' />
       {/* 4. Works Showcase Section (Optimized Grid) */}
-      <section className='max-w-7xl  mx-auto px-6 py-20'>
+      <section className='max-w-7xl mx-auto px-6 py-20'>
         <h2 className='text-4xl font-bold text-gray-900 mb-10 text-center'>
           Our Best Works
         </h2>
 
-        <div className='grid grid-cols-2 min-h-72 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-4'>
+        {/* ENHANCEMENT: Removed fixed height from grid container */}
+        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {WORK_INDICES.map((i) => {
             // The URL path for the public image
             const publicImagePath = `/images/work-${i}.png`;
@@ -310,9 +311,10 @@ export default function Home() {
             return (
               <motion.div
                 key={i}
-                // Pass the public URL string to the lightbox
                 onClick={() => openLightbox(publicImagePath)}
-                className='overflow-hidden rounded-xl shadow-lg group cursor-pointer relative  w-full min-h-96 border-4 border-white'
+                // ENHANCEMENT: Use aspect-ratio for perfect proportional fit
+                // aspect-square (1:1) or aspect-[4/3] (landscape) are good choices
+                className='overflow-hidden rounded-xl shadow-lg group cursor-pointer relative w-full aspect-square border-4 border-white'
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -323,12 +325,13 @@ export default function Home() {
                   // Use the desired public path syntax
                   src={publicImagePath}
                   alt={`Work ${i}`}
-                  fill
-                  className='object-cover transform group-hover:scale-125 transition duration-500'
+                  fill // Fills the parent container
+                  // object-cover ensures the image covers the container without being squished
+                  className='object-cover transform group-hover:scale-105 transition duration-500'
                 />
 
-                {/* Overlay for Click Hint (remains the same) */}
-                <div className='absolute inset-0 bg-black/5 group-hover:bg-opacity-50 transition duration-500 flex items-center justify-center'>
+                {/* Overlay for Click Hint (Slightly improved background opacity) */}
+                <div className='absolute inset-0 bg-black/10 group-hover:bg-opacity-50 transition duration-500 flex items-center justify-center'>
                   <p className='text-white text-base font-semibold opacity-0 group-hover:opacity-100 transition duration-500 border border-white px-4 py-2 rounded-full backdrop-blur-sm'>
                     View
                   </p>
