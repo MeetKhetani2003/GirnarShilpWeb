@@ -10,7 +10,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 // const MOCK_PRODUCTS = [...]; // Omitted for brevity in the final code block
 
-// --- Inquiry Form Modal Component (Updated with mocked fetch) ---
+// --- Inquiry Form Modal Component (Updated for Mobile Scrollability) ---
 const InquiryModal = ({ product, onClose }) => {
   if (!product) return null;
 
@@ -26,8 +26,6 @@ const InquiryModal = ({ product, onClose }) => {
 
   /**
    * Handles the form submission by simulating a successful API call.
-   * Note: In this self-contained environment, the actual axios.post will likely fail (404/CORS),
-   * but we simulate the success path for UI demonstration.
    */
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -62,11 +60,13 @@ const InquiryModal = ({ product, onClose }) => {
 
   return (
     <div
-      className='fixed inset-0 bg-gray-900/95 backdrop-blur-sm z-50 flex items-center justify-center p-4'
+      // FIX: Added overflow-y-auto to the backdrop and used items-start/pt-10 for better mobile positioning
+      className='fixed inset-0 bg-gray-900/95 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center p-4 pt-10 overflow-y-auto'
       onClick={onClose}
     >
       <div
-        className='bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 border-4 border-amber-500/20'
+        // FIX: Ensured max-h-full on mobile, and kept overflow-y-auto for the inner box
+        className='bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-full sm:max-h-[90vh] overflow-y-auto transform transition-all duration-300 border-4 border-amber-500/20'
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -206,7 +206,7 @@ const InquiryModal = ({ product, onClose }) => {
   );
 };
 
-// --- Quick View Modal Component ---
+// --- Quick View Modal Component (Updated for Mobile Scrollability) ---
 const QuickViewModal = ({ product, onClose, onInquireClick }) => {
   if (!product) return null;
 
@@ -222,11 +222,13 @@ const QuickViewModal = ({ product, onClose, onInquireClick }) => {
 
   return (
     <div
-      className='fixed inset-0 bg-gray-900/95 backdrop-blur-sm z-50 flex items-center justify-center p-4'
+      // FIX: Added overflow-y-auto to the backdrop and used items-start/pt-10 for better mobile positioning
+      className='fixed inset-0 bg-gray-900/95 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center p-4 pt-10 overflow-y-auto'
       onClick={onClose}
     >
       <div
-        className='bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row transform transition-all duration-300 border-4 border-amber-500/20'
+        // FIX: Allowed inner container to use full height on mobile and added mobile scrollability. Constrained height/overflow on desktop.
+        className='bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-full sm:max-h-[90vh] flex flex-col md:flex-row transform transition-all duration-300 border-4 border-amber-500/20 overflow-y-auto md:overflow-hidden'
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -266,7 +268,7 @@ const QuickViewModal = ({ product, onClose, onInquireClick }) => {
           />
         </div>
 
-        {/* Details Side */}
+        {/* Details Side - This will scroll with the main modal container on mobile */}
         <div className='w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-between bg-gray-900 text-white'>
           <div>
             <span className='text-sm text-amber-500 uppercase tracking-widest font-medium mb-1'>
@@ -613,7 +615,7 @@ export default function ProductsPage() {
             </p>
           </div>
         ) : (
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12'>
+          <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12'>
             {filteredProducts.slice(0, visibleProducts).map((p) => (
               <ProductCard
                 key={p._id}
