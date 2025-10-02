@@ -13,21 +13,56 @@ export async function POST(req) {
   await dbConnect();
   const body = await req.json();
   const { name, email, phone, productId, message } = body;
-  const product = await Product.findById(productId).lean();
-  const inquiry = await Inquiry.create({
+
+  let product = null;
+  // Set a flag to track if the provided productId is a valid ObjectId format
+  let isProductIdValid = true;
+
+  // FIX 1: Use try...catch for Product lookup AND set a flag if the ID is invalid
+  if (productId) {
+    try {
+      // This is where the CastError occurs if productId is not an ObjectId
+      product = await Product.findById(productId).lean();
+    } catch (e) {
+      // Specifically handle the Mongoose CastError on the '_id' path during lookup
+      if (e.name === 'CastError' && e.path === '_id') {
+        console.warn(
+          `Product ID '${productId}' failed casting to ObjectId. Proceeding without product reference.`
+        );
+        product = null;
+        isProductIdValid = false; // Mark as invalid
+      } else {
+        // Re-throw any other unexpected error
+        throw e;
+      }
+    }
+  }
+
+  console.log('Creating inquiry for product:', productId, product);
+
+  // Build the data object for Inquiry.create
+  const inquiryData = {
     name,
     email,
     phone,
-    productId,
     productSnapshot: product,
     message,
-  });
+  };
+
+  // FIX 2: Conditionally add productId ONLY IF it's present AND we haven't determined it's invalid.
+  // If isProductIdValid is false (due to CastError), omitting it here prevents the Inquiry validation error.
+  if (isProductIdValid && productId) {
+    inquiryData.productId = productId;
+  }
+
+  const inquiry = await Inquiry.create(inquiryData);
 
   try {
     await sendEmail({
       to: process.env.EMAIL_USER,
-      subject: `New Inquiry: ${product?.title}`,
-      text: `${name} - ${phone} - ${email} - ${message}`,
+      // Added fallback text if product is null
+      subject: `New Inquiry: ${product?.title || 'Unknown Product'}`,
+      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage:\n${message}\n\nProduct ID (Raw): ${productId}`,
     });
   } catch (e) {
     console.error('Mail failed', e);

@@ -79,6 +79,61 @@ const itemVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
+const renderWorksGroups = (workIndices, openLightbox) => {
+  const groups = [];
+  for (let i = 0; i < workIndices.length; i += 3) {
+    groups.push(workIndices.slice(i, i + 3));
+  }
+
+  return groups.map((group, groupIndex) => (
+    // This is one single slide in the Carousel
+    <div key={groupIndex} className='p-4 md:p-8'>
+      {/* Inner Container: Uses grid to perfectly align 3 items in the slide */}
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto'>
+        {group.map((i) => {
+          const publicImagePath = `/images/work-${i}.png`;
+          const infoTitle =
+            i % 2 === 0 ? 'Shri Ram Temple' : 'Custom Ancestor Statue';
+
+          return (
+            // Modern Card Structure
+            <div
+              key={i}
+              className='transition-all duration-300 transform hover:-translate-y-1'
+            >
+              <div
+                onClick={() => openLightbox(publicImagePath)}
+                // MODERN SHADOW: shadow-xl and hover:shadow-2xl are better than just shadow-lg
+                className='overflow-hidden rounded-lg shadow-xl group cursor-pointer relative w-full min-h-[28rem] border-4 border-white transform transition duration-500 hover:shadow-2xl'
+              >
+                <Image
+                  src={publicImagePath}
+                  alt={`Work ${i}`}
+                  fill
+                  className='object-cover transition duration-500 group-hover:scale-[1.05]'
+                />
+
+                {/* Overlay: Use a clean gradient or subtle filter */}
+                <div className='absolute inset-0 bg-gradient-to-t from-black/5 to-transparent transition duration-500 flex items-center justify-center'>
+                  <p className='text-white text-base font-semibold opacity-0 group-hover:opacity-100 transition duration-500 bg-amber-500/80 px-4 py-1.5 rounded-full backdrop-blur-sm'>
+                    VIEW WORK
+                  </p>
+                </div>
+              </div>
+
+              {/* Brief Info: Clean, minimal text */}
+              <div className='mt-4 text-center'>
+                <h4 className='font-sans font-semibold text-xl text-gray-900 truncate'>
+                  {infoTitle}
+                </h4>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  ));
+};
 
 export default function Home() {
   const [products, setProducts] = React.useState([]);
@@ -210,7 +265,6 @@ export default function Home() {
       </section>
       <hr className='max-w-7xl mx-auto border-gray-200' />
       {/* 3. Services Section (Image on top, Text below) - FIXED ALIGNMENT & IMAGE LOADING */}
-
       <section className='max-w-7xl mx-auto px-6 py-20'>
         <h2 className='text-4xl font-bold text-gray-900 mb-4 text-center'>
           What We Offer
@@ -301,57 +355,20 @@ export default function Home() {
         <h2 className='text-4xl font-bold text-gray-900 mb-10 text-center'>
           Our Best Works
         </h2>
-
-        {/* ENHANCEMENT: Removed fixed height from grid container */}
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {WORK_INDICES.map((i) => {
-            // The URL path for the public image
-            const publicImagePath = `/images/work-${i}.png`;
-
-            return (
-              <motion.div
-                key={i}
-                onClick={() => openLightbox(publicImagePath)}
-                // ENHANCEMENT: Use aspect-ratio for perfect proportional fit
-                // aspect-square (1:1) or aspect-[4/3] (landscape) are good choices
-                className='overflow-hidden rounded-xl shadow-lg group cursor-pointer relative w-full aspect-square border-4 border-white'
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Image
-                  // Use the desired public path syntax
-                  src={publicImagePath}
-                  alt={`Work ${i}`}
-                  fill // Fills the parent container
-                  // object-cover ensures the image covers the container without being squished
-                  className='object-cover transform group-hover:scale-105 transition duration-500'
-                />
-
-                {/* Overlay for Click Hint (Slightly improved background opacity) */}
-                <div className='absolute inset-0 bg-black/10 group-hover:bg-opacity-50 transition duration-500 flex items-center justify-center'>
-                  <p className='text-white text-base font-semibold opacity-0 group-hover:opacity-100 transition duration-500 border border-white px-4 py-2 rounded-full backdrop-blur-sm'>
-                    View
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        <div className='text-center mt-12'>
-          <motion.button
-            whileHover={{
-              scale: 1.05,
-              boxShadow: '0 8px 15px rgba(251, 191, 36, 0.5)',
-            }}
-            whileTap={{ scale: 0.95 }}
-            className='bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300 shadow-xl'
+        <div className='relative mx-auto max-w-6xl'>
+          <Carousel
+            showArrows={true}
+            showIndicators={true}
+            showThumbs={false}
+            showStatus={false}
+            infiniteLoop={true}
+            autoPlay={true}
+            interval={4000} // Slightly faster transition
+            // Custom class for CSS overrides
+            className='modern-work-carousel'
           >
-            View All Projects
-          </motion.button>
+            {renderWorksGroups(WORK_INDICES, openLightbox)}
+          </Carousel>
         </div>
       </section>
       {/* 5. Products Section (Dynamic and Animated) */}

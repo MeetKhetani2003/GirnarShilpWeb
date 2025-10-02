@@ -4,6 +4,8 @@ import Product from '@/models/Product';
 export async function GET() {
   await dbConnect();
   const products = await Product.find().lean();
+  // console.log('Fetched products from DB:', products);
+
   return new Response(JSON.stringify({ products }), { status: 200 });
 }
 
